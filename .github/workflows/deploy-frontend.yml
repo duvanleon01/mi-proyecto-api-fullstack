@@ -1,0 +1,43 @@
+# .github/workflows/deploy-frontend.yml
+
+name: Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master # Asegúrate de que esta sea la rama correcta (master o main)
+
+  # Permite ejecutar este workflow manualmente desde la pestaña Actions
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js (only if your frontend needs a build step like npm install/build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Usa una versión LTS de Node.js
+
+      # Para este proyecto simple de HTML/JS, no hay un "build" explícito.
+      # Pero si tuvieras un framework (React/Vue/Angular), necesitarías estos pasos:
+      # - name: Install dependencies (Frontend)
+      #   run: npm install
+      #   working-directory: ./frontend-app
+
+      # - name: Build frontend
+      #   run: npm run build # Ejemplo para un proyecto con un paso de build
+      #   working-directory: ./frontend-app
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend-app # ¡Aquí es donde especificas la carpeta del front-end!
+          #destination_dir: # Descomentar si quieres desplegar en una subcarpeta de GH Pages
